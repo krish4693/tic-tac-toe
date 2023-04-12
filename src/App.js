@@ -3,19 +3,27 @@ import { useState } from 'react';
 // import { StrictMode } from "react";
 // import { createRoot } from "react-dom/client";
 
-
-
 function Square({ value, onSquareClick }) {
   return <button className='square' onClick={onSquareClick}>{value}</button>
 }
 
 export default function Board() {
   const [square, setSquare] = useState(Array(9).fill(null))         //defines the state of each square in the board 
-
+  const [isNext,setIsNext]=useState(true)
 
   function handleClick(i) {
+    if(square[i]){
+      return;
+    }
     const nextSquare = square.slice();
+    if(isNext){
     nextSquare[i] = "X";
+    setIsNext(false)
+    }
+    else{
+      nextSquare[i]="O"
+      setIsNext(true)
+    }
     setSquare(nextSquare);
   }
 
@@ -39,4 +47,22 @@ export default function Board() {
       </div>
     </div>
   );
+}
+
+function calculateWinner(){
+  const lines=[
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ]
+  for(let i=0;i<lines.length;i++){
+    const [a,b,c]=lines[i]
+    
+  }
+
 }
