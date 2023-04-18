@@ -7,9 +7,43 @@ function Square({ value, onSquareClick }) {
   return <button className='square' onClick={onSquareClick}>{value}</button>
 }
 
-export default function Board() {
-  const [square, setSquare] = useState(Array(9).fill(null))         //defines the state of each square in the board 
-  const [isNext, setIsNext] = useState(true)
+
+
+
+//board function
+function Board() {
+
+  const [square, setSquare] = useState(Array(9).fill(null));
+  const [isNext,setIsNext]=useState(true)
+  const winner = calculateWinner(square)
+  let status;
+  if (winner) {
+    status = "Winner:" + winner;
+  }
+  else {
+    status = "Next player:" + (isNext ? "X" : "O");
+  }
+
+
+  //handleClick function
+  function handleClick(i) {
+    if (square[i] || calculateWinner()) {
+      return;
+    }
+    const nextSquare = square.slice();
+    console.log(nextSquare)
+    if (isNext) {
+      nextSquare[i] = "X";
+      setIsNext(false)
+    }
+    else {
+      nextSquare[i] = "O"
+      setIsNext(true)
+    }
+    setSquare(nextSquare);
+  }
+
+
   function calculateWinner() {
     const lines = [
       [0, 1, 2],
@@ -23,47 +57,25 @@ export default function Board() {
     ]
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i]
-      if (square[a] === square[a] && square[b] && square[a] === square[c]) {
+      if (square[a] === square[a] && square[a] === square[b] && square[a] === square[c]) {
         return square[a];
       }
-
+  
     }
     return null;
-
-  }
-
-  const winner = calculateWinner(square)
-  let status;
-  if (winner) {
-    status = "Winner:" + winner;
-  }
-  else {
-    status = "Next player:" + (isNext ? "X" : "O");
-  }
-
-  function handleClick(i) {
-    if (square[i] || calculateWinner()) {
-      return;
-    }
-    const nextSquare = square.slice();
-    if (isNext) {
-      nextSquare[i] = "X";
-      setIsNext(false)
-    }
-    else {
-      nextSquare[i] = "O"
-      setIsNext(true)
-    }
-    setSquare(nextSquare);
+  
   }
 
   return (
     <div>
-      <div className='header'>Tic-tac-toe</div>
+      <div className='header'><h1>Tic-Tac-Toe</h1></div>
       <div className='game-wrapper'>
         <div>
-          <div className='status'>{status}</div>
+          <div className='status' style={{ margin: "40px" }}>{status}</div>
           <div className='board-row'>
+
+
+
             <Square value={square[0]} onSquareClick={() => { handleClick(0) }} />
             <Square value={square[1]} onSquareClick={() => { handleClick(1) }} />
             <Square value={square[2]} onSquareClick={() => { handleClick(2) }} />
@@ -87,3 +99,21 @@ export default function Board() {
   );
 }
 
+
+//Game function
+
+export default function Game() {
+  const [isNext,setIsNext]=useState(true)
+  const [history,setHistory]=useState(Array(9).fill(null))
+  return (
+    <div className='game'>
+      <div className='game-board'>
+        <Board />
+      </div>
+      <div className='game-info'>
+        <ol>{/*TODO*/}</ol>
+      </div>
+
+    </div>
+  );
+}
